@@ -208,7 +208,22 @@ function Device:poll()
 		elseif (love.microphonedata) then
 			love.microphonedata(self, buffer)
 		end
+    return peakAmplitude(buffer)
 	end
+end
+
+--[[
+
+       Returns peak amplitude
+]]
+function peakAmplitude(sounddata)
+    local peak_amp = -math.huge
+    for t = 0,sounddata:getSampleCount()-1 do
+        local amp = math.abs(sounddata:getSample(t)) -- |s(t)|
+        peak_amp = math.max(peak_amp, amp)
+    end
+        local peak_perc = math.floor((peak_amp / 1) * 100) or 0
+    return peak_perc
 end
 
 --[[
